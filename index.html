@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Pantry System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --bg-main: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --fresh-color: #10b981;
+      --fresh-bg: #ecfdf5;
+      --warning-color: #f59e0b;
+      --warning-bg: #fffbeb;
+      --danger-color: #ef4444;
+      --danger-bg: #fef2f2;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 50px;
+    }
+
+    .app-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      background: var(--primary);
+      color: white;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      font-size: 1.25rem;
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 1.2rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    .icon-total { background: #e0f2fe; color: #0284c7; }
+    .icon-fresh { background: var(--fresh-bg); color: var(--fresh-color); }
+    .icon-expiring { background: var(--warning-bg); color: var(--warning-color); }
+    .icon-expired { background: var(--danger-bg); color: var(--danger-color); }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stat-info h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .controls-card {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .pantry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .pantry-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .badge-fresh { background: var(--fresh-bg); color: var(--fresh-color); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning-color); }
+    .badge-expired { background: var(--danger-bg); color: var(--danger-color); }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      padding: 0.65rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: #f1f5f9; color: var(--text-main); }
+    .btn-danger { background: #fee2e2; color: #b91c1c; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: grid;
+      place-items: center;
+      z-index: 100;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 450px;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-basket-shopping"></i></div>
+      <div>
+        <h1>Smart Pantry</h1>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="open-modal-btn">
+      <i class="fa-solid fa-plus"></i> Add Item
+    </button>
+  </header>
+
+  <main class="container">
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon icon-total"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Total Items</span>
+          <h3 id="stat-total">0</h3>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-fresh"><i class="fa-solid fa-seedling"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Fresh</span>
+          <h3 id="stat-fresh">0</h3>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-expiring"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Expiring Soon</span>
+          <h3 id="stat-expiring">0</h3>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-expired"><i class="fa-solid fa-ban"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Expired</span>
+          <h3 id="stat-expired">0</h3>
+        </div>
+      </div>
+    </section>
+
+    <div class="controls-card">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search item...">
+      </div>
+    </div>
+
+    <div id="pantry-grid" class="pantry-grid"></div>
+    <div id="empty-msg" class="hidden" style="text-align: center; padding: 2rem; color: #64748b;">
+      Koi item nahi mila. "Add Item" button dabayein!
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div id="item-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3 style="margin-bottom: 1rem;">Add Pantry Item</h3>
+      <form id="item-form">
+        <div class="form-group">
+          <label>Item Name</label>
+          <input type="text" id="item-name" required placeholder="e.g. Milk, Apples, Rice">
+        </div>
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="text" id="item-qty" required placeholder="e.g. 2 Liters, 1 Kg">
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" id="item-expiry" required>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+          <button type="button" class="btn btn-secondary" id="close-modal-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // LocalStorage Key
+    const STORAGE_KEY = 'smart_pantry_simple_items';
+
+    // Sample default items
+    const sampleItems = [
+      { id: '1', name: 'Milk', qty: '1 Liter', expiry: getFutureDate(2) },
+      { id: '2', name: 'Bread', qty: '1 Packet', expiry: getFutureDate(0) },
+      { id: '3', name: 'Rice', qty: '5 Kg', expiry: getFutureDate(30) }
+    ];
+
+    function getFutureDate(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return d.toISOString().split('T')[0];
+    }
+
+    // Load initial data
+    let items = [];
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      items = stored ? JSON.parse(stored) : sampleItems;
+    } catch (e) {
+      items = sampleItems;
+    }
+
+    const modal = document.getElementById('item-modal');
+    const form = document.getElementById('item-form');
+    const pantryGrid = document.getElementById('pantry-grid');
+    const searchInput = document.getElementById('search-input');
+    const emptyMsg = document.getElementById('empty-msg');
+
+    function checkExpiry(dateStr) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const exp = new Date(dateStr);
+      exp.setHours(0, 0, 0, 0);
+
+      const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
+
+      if (diff < 0) return { type: 'expired', label: 'Expired', class: 'badge-expired' };
+      if (diff <= 2) return { type: 'warning', label: 'Expiring Soon', class: 'badge-warning' };
+      return { type: 'fresh', label: 'Fresh', class: 'badge-fresh' };
+    }
+
+    function render() {
+      const query = searchInput.value.toLowerCase();
+      pantryGrid.innerHTML = '';
+
+      let fresh = 0, warning = 0, expired = 0;
+
+      items.forEach(item => {
+        const status = checkExpiry(item.expiry);
+        if (status.type === 'fresh') fresh++;
+        if (status.type === 'warning') warning++;
+        if (status.type === 'expired') expired++;
+      });
+
+      document.getElementById('stat-total').innerText = items.length;
+      document.getElementById('stat-fresh').innerText = fresh;
+      document.getElementById('stat-expiring').innerText = warning;
+      document.getElementById('stat-expired').innerText = expired;
+
+      const filtered = items.filter(item => item.name.toLowerCase().includes(query));
+
+      if (filtered.length === 0) {
+        emptyMsg.classList.remove('hidden');
+      } else {
+        emptyMsg.classList.add('hidden');
+      }
+
+      filtered.forEach(item => {
+        const status = checkExpiry(item.expiry);
+        const card = document.createElement('div');
+        card.className = 'pantry-card';
+        card.innerHTML = `
+          <div>
+            <span class="badge ${status.class}">${status.label}</span>
+            <h3 style="margin-bottom: 5px;">${item.name}</h3>
+            <p style="color: #64748b; font-size: 0.9rem;">Quantity: <b>${item.qty}</b></p>
+            <p style="color: #64748b; font-size: 0.9rem;">Expiry: <b>${item.expiry}</b></p>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-danger" onclick="deleteItem('${item.id}')">Delete</button>
+          </div>
+        `;
+        pantryGrid.appendChild(card);
+      });
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Modal Events
+    document.getElementById('open-modal-btn').addEventListener('click', () => {
+      form.reset();
+      document.getElementById('item-expiry').value = getFutureDate(7);
+      modal.classList.remove('hidden');
+    });
+
+    document.getElementById('close-modal-btn').addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+
+    // Add Item Event
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('item-name').value.trim();
+      const qty = document.getElementById('item-qty').value.trim();
+      const expiry = document.getElementById('item-expiry').value;
+
+      if (!name || !qty || !expiry) return;
+
+      const newItem = {
+        id: Date.now().toString(),
+        name: name,
+        qty: qty,
+        expiry: expiry
+      };
+
+      items.unshift(newItem);
+      render();
+      modal.classList.add('hidden');
+    });
+
+    // Delete Item
+    window.deleteItem = function(id) {
+      items = items.filter(item => item.id !== id);
+      render();
+    };
+
+    searchInput.addEventListener('input', render);
+
+    // Initial run
+    render();
+  </script>
+</body>
+</html> 
